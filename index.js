@@ -23,7 +23,13 @@ app.use(cors({
 
 
 mongoDbConnection()
+app.get('/', (req, res) => {
+    res.send('Welcome to my Travel App API!');
+});
 
+app.get('/test', (req, res) => {
+    res.json({ message: 'Test endpoint is working!' });
+});
 app.use('/user',userRouter)
 app.use('/hotel',hotelRouter)
 // app.use('/room',roomRouter)
