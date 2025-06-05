@@ -35,8 +35,15 @@ export const addTrip = async (req, res) => {
     res.status(500).json({ error: "Error creating trip" });
   }
 };
-
-
+ 
+   export const getalltrips = async (req, res) => {
+    try {
+        const trips = await tripModel.find(); // Fetch all hotels
+        res.status(200).json(trips);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching trips", error });
+    }
+};
 
 export const getTrip = async (req, res) => {
     try {
