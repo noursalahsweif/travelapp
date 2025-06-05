@@ -38,22 +38,19 @@ export const createHotel = async (req, res, next) => {
 
   export const getHotels = async (req, res) => {
     try {
-        const hotels = await hotelModel.find(); // Fetch all hotels
-        res.status(200).json(hotels);
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching hotels", error });
-    }
-};
+    const { city } = req.query; // get city from query string
 
-export const getHotelsByCity = async (req, res) => {
-  try {
-    const {city} = req.body
-    console.log(city);
-    
-    const hotels = await hotelModel.find({ city});
-    // Fetch all hotels
-      res.status(200).json(hotels);
+    // Create query object: either filtered by city or all
+    const query = city ? { city: { $regex: new RegExp(city, 'i') } } : {};
+
+    const hotels = await hotelModel
+      .find(query)
+      
+
+    res.status(200).json(hotels);
   } catch (error) {
-      res.status(500).json({ message: "Error fetching hotels", error });
+    console.error("Error fetching trips:", error);
+    res.status(500).json({ error: "Error fetching trips" });
   }
 };
+

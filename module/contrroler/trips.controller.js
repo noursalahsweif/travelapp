@@ -1,6 +1,6 @@
 // import from "../modles/trips.model.js";
 import validateTrip from '../../validation/trips.js';
-import tripModel from './../modles/trips.model.js';
+import tripModel from '../modles/trips.model.js';
 
 
 
@@ -35,36 +35,43 @@ export const addTrip = async (req, res) => {
     res.status(500).json({ error: "Error creating trip" });
   }
 };
- 
-   export const getalltrips = async (req, res) => {
-    try {
-        const trips = await tripModel.find(); // Fetch all hotels
-        res.status(200).json(trips);
-    } catch (error) {
-        res.status(500).json({ message: "Error fetching trips", error });
-    }
-};
 
+// trips.controller.js
 export const getTrip = async (req, res) => {
-    try {
-        const { id } = req.params;  // Get trip ID from URL
-        console.log("Trip ID:", id);
+  try {
+    const { id } = req.params;
 
-        // Check if trip exists before populating
-        const trip = await tripModel.findById(id);
-        if (!trip) return res.status(404).json({ error: "Trip not found" });
+    if (id) {
+      const trip = await tripModel.findById(id);
+      if (!trip) return res.status(404).json({ error: "Trip not found" });
 
-        // Fetch trip and populate related data
-        const populatedTrip = await tripModel
-            .findById(id)
-            .populate("hotelId", "name city")  // Only fetch specific fields
-            .populate("roomId", "type price")
-            .populate("flightId", "airline departure");
+      const populatedTrip = await tripModel
+        .findById(id)
+        
 
-        console.log("Trip with populate:", populatedTrip);
-        res.status(200).json(populatedTrip);
-    } catch (error) {
-        console.error("Error fetching trip:", error);
-        res.status(500).json({ error: "Error fetching trip" });
-    }
+      return res.status(200).json(populatedTrip);
+    } 
+  } catch (error) {
+    console.error("Error fetching trip(s):", error);
+    res.status(500).json({ error: "Error fetching trip(s)" });
+  }
 };
+
+export const getTripsByCity = async (req, res) => {
+  try {
+    const { city } = req.query; // get city from query string
+
+    // Create query object: either filtered by city or all
+    const query = city ? { city: { $regex: new RegExp(city, 'i') } } : {};
+
+    const trips = await tripModel
+      .find(query)
+      
+
+    res.status(200).json(trips);
+  } catch (error) {
+    console.error("Error fetching trips:", error);
+    res.status(500).json({ error: "Error fetching trips" });
+  }
+};
+
