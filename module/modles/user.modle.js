@@ -1,9 +1,5 @@
 
 import mongoose from "mongoose";
-import { boolean } from "yup";
-
-
-
 const userScheama = new mongoose.Schema({
 
 
@@ -36,7 +32,9 @@ const userScheama = new mongoose.Schema({
       active:{
         type:Boolean,
         default:true
-      }
+      },
+      wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'trip' }],
+      tokens:[String]  
 })
 
  const userModle = mongoose.model("User" , userScheama)

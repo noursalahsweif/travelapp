@@ -7,6 +7,7 @@ const hotelStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'hotels',
+    quality: 'auto:best',
     allowed_formats: ['jpg', 'jpeg', 'png'],
   },
 });
@@ -16,6 +17,7 @@ const tripStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: 'trips',
+    quality: 'auto:best',
     allowed_formats: ['jpg', 'jpeg', 'png'],
   },
 });

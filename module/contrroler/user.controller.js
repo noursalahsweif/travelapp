@@ -91,6 +91,8 @@ export const login = async (req, res) => {
                     
                     const token = createToken(userData._id);
                     console.log(token);
+                    userData.tokens.push( token );
+                    await userData.save();
                     
                     return res.status(200).json({
                         success: true,
@@ -131,6 +133,25 @@ export const forgotPass = async (req,res) =>{
 
     res.status(200).json({ message: 'Password has been updated' });
 
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+export const addToCart = async (req , res)=>{
+    try {
+       const itemId = req.params.id;
+    const user = await userModle.findById(req.user.id);
+
+    // Optional: Prevent duplicates
+    if (!user.wishlist.includes(itemId)) {
+      user.wishlist.push(itemId); // ✅ This is where you use push
+      await user.save();
+      return res.json({ message: 'Item added to wishlist', wishlist: user.wishlist });
+    } else {
+      return res.status(400).json({ message: 'Item already in wishlist' });
+    }
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Internal server error" });

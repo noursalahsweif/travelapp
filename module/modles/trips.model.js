@@ -28,6 +28,11 @@ const TripSchema = new mongoose.Schema(
     city:{
       type:String,
       required:true
+    },
+    rating:{
+      type:String,
+      min: 0,
+      max: 5,
     }
 
   },
