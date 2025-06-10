@@ -99,7 +99,7 @@ export const getWishList= async (req, res)=>{
 export const deleteWishList= async (req,res)=>{
   try {
     const userId = req.user?.id || req.body.userId || req.query.userId;
-    const { tripId } = req.body;
+    const { tripId } = req.params;
 
     if (!userId || !tripId) {
       return res.status(400).json({ message: "User ID and Trip ID are required" });

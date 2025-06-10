@@ -13,7 +13,7 @@ tripRouter.post('/addtrip', uploadTrip.array('photos', 5), addTrip);
 tripRouter.get('/gettrips',getTripsByCity);
 tripRouter.get('/gettripsbyid/:id?',getTrip);
 tripRouter.get('/wishlist/', jwtCheck ,getWishList);
-tripRouter.delete('/deletewishlist/', jwtCheck ,deleteWishList);
+tripRouter.delete('/deletewishlist/:tripId?', jwtCheck ,deleteWishList);
 
 
 export default tripRouter
