@@ -90,14 +90,14 @@ export const login = async (req, res) => {
                     console.log("its on creating token");
                     
                     const token = createToken(userData._id);
-                    console.log(token);
+                    
                     userData.tokens.push( token );
                     await userData.save();
-                    
+                    const name1 = userData.name
                     return res.status(200).json({
                         success: true,
                         token,
-                        userData
+                        name:name1
                     });
                 } else {
                     return res.status(200).json({ success: false });
