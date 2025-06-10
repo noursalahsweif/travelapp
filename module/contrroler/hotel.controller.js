@@ -36,21 +36,21 @@ export const createHotel = async (req, res, next) => {
     }
   };
 
-  export const getHotels = async (req, res) => {
-    try {
-    const { city } = req.query; // get city from query string
+    export const getHotels = async (req, res) => {
+      try {
+      const { city } = req.query; // get city from query string
 
-    // Create query object: either filtered by city or all
-    const query = city ? { city: { $regex: new RegExp(city, 'i') } } : {};
+      // Create query object: either filtered by city or all
+      const query = city ? { city: { $regex: new RegExp(city, 'i') } } : {};
 
-    const hotels = await hotelModel
-      .find(query)
-      
+      const hotels = await hotelModel
+        .find(query)
+        
 
-    res.status(200).json(hotels);
-  } catch (error) {
-    console.error("Error fetching trips:", error);
-    res.status(500).json({ error: "Error fetching trips" });
-  }
-};
+      res.status(200).json(hotels);
+    } catch (error) {
+      console.error("Error fetching trips:", error);
+      res.status(500).json({ error: "Error fetching trips" });
+    }
+  };
 

@@ -1,6 +1,7 @@
 // import from "../modles/trips.model.js";
 import validateTrip from '../../validation/trips.js';
 import tripModel from '../modles/trips.model.js';
+import userModle from '../modles/user.modle.js';
 
 
 
@@ -75,3 +76,51 @@ export const getTripsByCity = async (req, res) => {
   }
 };
 
+export const getWishList= async (req, res)=>{
+   try {
+    const userId = req.user.id; // or however you get the logged-in user's ID
+    console.log(userId);
+    
+    // Find user and populate wishlist with full trip data
+    const user = await userModle.findById(userId).populate('wishlist');
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    // user.wishlist now contains full trip documents
+    res.status(200).json(user.wishlist)
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+}
+
+export const deleteWishList= async (req,res)=>{
+  try {
+    const userId = req.user?.id || req.body.userId || req.query.userId;
+    const { tripId } = req.body;
+
+    if (!userId || !tripId) {
+      return res.status(400).json({ message: "User ID and Trip ID are required" });
+    }
+
+    const user = await userModle.findById(userId);
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    // Check if trip exists in wishlist
+    const index = user.wishlist.indexOf(tripId);
+    if (index === -1) {
+      return res.status(400).json({ message: "Trip not in wishlist" });
+    }
+
+    // Remove the trip ID
+    user.wishlist.splice(index, 1);
+    await user.save();
+
+    res.status(200).json({ message: "Trip removed from wishlist", wishlist: user.wishlist });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+}
