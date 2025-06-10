@@ -124,10 +124,12 @@ export const forgotPass = async (req,res) =>{
         
         // const user = await userModle.findOne({ email });
     const user = await userModle.findOne(
-      { email:email },
-      { password: hashedPassword },
-      { new: true }
+      { email:email }
     );
+    console.log(user);
+    
+    user.password = hashedPassword
+    await user.save()
 
     if (!user) return res.status(404).json({ error: 'User not found' });
 
