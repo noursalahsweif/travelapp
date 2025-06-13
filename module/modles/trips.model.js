@@ -33,6 +33,10 @@ const TripSchema = new mongoose.Schema(
       type:String,
       min: 0,
       max: 5,
+    },
+    type:{
+      type:String,
+      required:true
     }
 
   },

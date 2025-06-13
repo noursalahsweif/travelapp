@@ -9,7 +9,7 @@ import userModle from '../modles/user.modle.js';
 
 export const addTrip = async (req, res) => {
   try {
-    const { name, description, price, city, location, date } = req.body;
+    const { name, description, price, city, location, date ,type} = req.body;
 
     const photos = req.files?.map(file => file.path); // handled by multer
 
@@ -19,6 +19,7 @@ export const addTrip = async (req, res) => {
       price: Number(price),
       city: city?.trim(),
       location: location?.trim(),
+      type: type?.trim(),
       date: date ? new Date(date) : undefined,
       photos
     };
@@ -60,14 +61,18 @@ export const getTrip = async (req, res) => {
 
 export const getTripsByCity = async (req, res) => {
   try {
-    const { city } = req.query; // get city from query string
+    const { city, type } = req.query; // get city and type from query string
 
-    // Create query object: either filtered by city or all
-    const query = city ? { city: { $regex: new RegExp(city, 'i') } } : {};
+    // Build dynamic query object
+    const query = {};
+    if (city) {
+      query.city = { $regex: new RegExp(city, 'i') };
+    }
+    if (type) {
+      query.type = { $regex: new RegExp(type, 'i') };
+    }
 
-    const trips = await tripModel
-      .find(query)
-      
+    const trips = await tripModel.find(query);
 
     res.status(200).json(trips);
   } catch (error) {
