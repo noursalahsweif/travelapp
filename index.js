@@ -32,6 +32,8 @@ app.get('/protected-route', jwtCheck, async (req, res) => {
         res.status(500).json({ message: "User data not found after authentication." });
     }
 });
+
+
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     //  origin:"http://localhost:3000",

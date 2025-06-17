@@ -1,3 +1,4 @@
+import { Double } from "bson";
 import mongoose from "mongoose";
 
 // const { Schema, model, models } = mongoose;
@@ -30,7 +31,7 @@ const TripSchema = new mongoose.Schema(
       required:true
     },
     rating:{
-      type:String,
+      type:Number,
       min: 0,
       max: 5,
     },
