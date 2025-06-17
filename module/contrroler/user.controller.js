@@ -150,9 +150,9 @@ export const addToCart = async (req , res)=>{
     if (!user.wishlist.includes(itemId)) {
       user.wishlist.push(itemId); // ✅ This is where you use push
       await user.save();
-      return res.json({ message: 'trip added to wishlist', wishlist: user.wishlist });
+      return res.json({ message: 'item added to wishlist', wishlist: user.wishlist });
     } else {
-      return res.status(400).json({ message: 'trip already in wishlist' });
+      return res.status(400).json({ message: 'item already in wishlist' });
     }
     } catch (error) {
         console.error(error);

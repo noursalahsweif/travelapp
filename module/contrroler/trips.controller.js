@@ -2,6 +2,7 @@
 import validateTrip from '../../validation/trips.js';
 import tripModel from '../modles/trips.model.js';
 import userModle from '../modles/user.modle.js';
+import hotelModel from './../modles/hotels.model.js';
 
 
 
@@ -81,25 +82,37 @@ export const getTripsByCity = async (req, res) => {
   }
 };
 
-export const getWishList= async (req, res)=>{
-   try {
-    const userId = req.user.id; // or however you get the logged-in user's ID
-    console.log(userId);
-    
-    // Find user and populate wishlist with full trip data
-    const user = await userModle.findById(userId).populate('wishlist');
-    
+export const getWishList = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await userModle.findById(userId);
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    
-    // user.wishlist now contains full trip documents
-    res.status(200).json(user.wishlist)
+
+    const wishlistIds = user.wishlist;
+
+    // Try to find matching Trips
+    const trips = await tripModel.find({ _id: { $in: wishlistIds } });
+
+    // Get the IDs that were *not* found as trips
+    const tripIds = trips.map(trip => tripModel._id);
+    const remainingIds = wishlistIds.filter(
+      id => !tripIds.includes(id)
+    );
+
+    // Try to find those as Hotels
+    const hotels = await hotelModel.find({ _id: { $in: remainingIds } });
+
+    const fullWishlist = [...trips, ...hotels];
+
+    res.status(200).json(fullWishlist);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server error' });
   }
-}
+};
 
 export const deleteWishList= async (req,res)=>{
   try {
