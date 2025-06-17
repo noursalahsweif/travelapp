@@ -28,14 +28,13 @@ export const addTrip = async (req, res) => {
     const result = await validateTrip(data);
 
     if (!result.valid) {
-      return res.status(400).json({ errors: result.errors });
+      return res.status(400).json({ message: result.errors });
     }
 
     const savedTrip = await tripModel.create(data);
     res.status(200).json(savedTrip);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Error creating trip" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -55,16 +54,13 @@ export const getTrip = async (req, res) => {
       return res.status(200).json(populatedTrip);
     } 
   } catch (error) {
-    console.error("Error fetching trip(s):", error);
-    res.status(500).json({ error: "Error fetching trip(s)" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
 export const getTripsByCity = async (req, res) => {
   try {
-    const { city, type } = req.query; // get city and type from query string
-
-    // Build dynamic query object
+    const { city, type } = req.query; 
     const query = {};
     if (city) {
       query.city = { $regex: new RegExp(city, 'i') };
@@ -77,8 +73,7 @@ export const getTripsByCity = async (req, res) => {
 
     res.status(200).json(trips);
   } catch (error) {
-    console.error("Error fetching trips:", error);
-    res.status(500).json({ error: "Error fetching trips" });
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -93,24 +88,20 @@ export const getWishList = async (req, res) => {
 
     const wishlistIds = user.wishlist;
 
-    // Try to find matching Trips
     const trips = await tripModel.find({ _id: { $in: wishlistIds } });
 
-    // Get the IDs that were *not* found as trips
     const tripIds = trips.map(trip => tripModel._id);
     const remainingIds = wishlistIds.filter(
       id => !tripIds.includes(id)
     );
 
-    // Try to find those as Hotels
     const hotels = await hotelModel.find({ _id: { $in: remainingIds } });
 
     const fullWishlist = [...trips, ...hotels];
 
     res.status(200).json(fullWishlist);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Internal server error ' });
   }
 };
 
@@ -126,19 +117,16 @@ export const deleteWishList= async (req,res)=>{
     const user = await userModle.findById(userId);
     if (!user) return res.status(404).json({ message: "User not found" });
 
-    // Check if trip exists in wishlist
     const index = user.wishlist.indexOf(tripId);
     if (index === -1) {
       return res.status(400).json({ message: "Trip not in wishlist" });
     }
 
-    // Remove the trip ID
     user.wishlist.splice(index, 1);
     await user.save();
 
     res.status(200).json({ message: "Trip removed from wishlist", wishlist: user.wishlist });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Internal server error" });
   }
 }

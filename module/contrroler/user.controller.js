@@ -36,11 +36,11 @@ export const authSignup = async (req, res) => {
                     email,
                     phone,
                     password: encryptedPassword,
-                     // Store encrypted password
+                     
                 };
                 console.log(password);
                 const existData = await userModle.findOne({ email:values.email });
-                      // console.log(values.name);
+                      
                       console.log(existData);
                 
 
@@ -55,14 +55,24 @@ export const authSignup = async (req, res) => {
             })
             .catch((validationError) => {
                 console.error(validationError);
-                return res.status(400).json({ error: "Validation failed" });
+                return res.status(400).json({ message: "Validation failed" });
             });
 
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ message: "Server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+export const adminLogin = async (req,res) =>{
+    try {
+        const {email , password} = req.body
+
+    } catch (error) {
+        
+    }
+}
+
+
 
 
 
@@ -109,8 +119,7 @@ export const login = async (req, res) => {
             return res.status(200).json({ action: false });
         }
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 };
 
@@ -131,13 +140,12 @@ export const forgotPass = async (req,res) =>{
     user.password = hashedPassword
     await user.save()
 
-    if (!user) return res.status(404).json({ error: 'User not found' });
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
     res.status(200).json({ message: 'Password has been updated' });
 
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
 
@@ -155,7 +163,6 @@ export const addToCart = async (req , res)=>{
       return res.status(400).json({ message: 'item already in wishlist' });
     }
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({ error: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 }

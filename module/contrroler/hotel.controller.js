@@ -14,13 +14,13 @@ export const createHotel = async (req, res, next) => {
       
       const result = await validateHotel(data);
        if (!result.valid) {
-    return res.status(400).json({ errors: result.errors });
+    return res.status(400).json({ message:"validation error" });
   }
 
       const savedHotel = await hotelModel.create(data);
       res.status(200).json(savedHotel);
     } catch (err) {
-      next(err);
+      res.status(500).json({ error: "Error adding hotel" })
     }
   };
 
@@ -32,7 +32,7 @@ export const createHotel = async (req, res, next) => {
       const hotel = await hotelModel.findById(hotelId);
       res.status(200).json(hotel);
     } catch (err) {
-      next(err);
+      res.status(500).json({ message: "hotel not found" })
     }
   };
 
@@ -49,8 +49,8 @@ export const createHotel = async (req, res, next) => {
 
       res.status(200).json(hotels);
     } catch (error) {
-      console.error("Error fetching trips:", error);
-      res.status(500).json({ error: "Error fetching trips" });
+      console.error("Error fetching hotel:", error);
+      res.status(500).json({ error: "Error fetching hotel" });
     }
   };
 

@@ -38,7 +38,7 @@ export const jwtCheck = async (req, res, next)=>{
     req.user = { id: user._id, email: user.email }; // You can add more info
     next();
   } catch (err) {
-    res.status(400).json({ message: 'Invalid token' , err });
+    res.status(400).json({ message: 'Invalid token'  });
   }
 }
 

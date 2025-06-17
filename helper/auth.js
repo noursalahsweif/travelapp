@@ -26,7 +26,7 @@ export const userCollection = {
         return null;
       }
     } catch (error) {
-      console.error(error.message);
+      console.log(error.message);
     }
   },
 };
