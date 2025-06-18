@@ -65,11 +65,22 @@ export const authSignup = async (req, res) => {
 
 export const adminLogin = async (req,res) =>{
     try {
-        const {email , password} = req.body
+    const userId = req.params.id;
 
-    } catch (error) {
-        
-    }
+    const user = await userModle.findByIdAndUpdate(
+      userId,
+      { isAdmin: true }
+    );
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json({
+      message: "User has been granted admin rights",
+      user
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
 }
 
 

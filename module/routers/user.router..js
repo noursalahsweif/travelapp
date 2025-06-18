@@ -7,7 +7,7 @@ import { jwtCheck } from "../../utils/jwtGeneration.js";
 const userRouter = Router()
 
 userRouter.post('/signup',authSignup)
-userRouter.post('/adminlogin',adminLogin)
+userRouter.put('/adminlogin/:id',adminLogin)
 userRouter.post('/login',login)
 userRouter.post('/forgotpass',forgotPass)
 userRouter.post('/addwishlist/:id', jwtCheck,addToCart)
