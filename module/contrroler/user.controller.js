@@ -80,8 +80,6 @@ export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         const userData = await authLoginHelper(email);
-        // console.log(userData);
-        // console.log(userData.active);
         
         
 

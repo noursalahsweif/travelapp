@@ -36,11 +36,13 @@ export const authLoginHelper = async (email) => {
     
     
     const authLogin = await userModle.findOne({ email });
-    
+    if (!authLogin){
+      return res.status(500).json({ message: "email not found" });
+    }
     return authLogin;
     
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
