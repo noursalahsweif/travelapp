@@ -23,9 +23,6 @@ const TripSchema = new mongoose.Schema(
     location:{
     type:String
     },
-    date:{
-      type:Date
-    },
     city:{
       type:String,
       required:true

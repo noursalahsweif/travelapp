@@ -80,13 +80,13 @@ export const login = async (req, res) => {
     try {
         const { email, password } = req.body;
         const userData = await authLoginHelper(email);
-        
-        
-
         if (userData) {
             
             const encryptPassword = userData.password;
             // console.log(encryptPassword);
+            console.log(password);
+            console.log(encryptPassword);
+            
             
             const matchPassword = await bcrypt.compare(password, encryptPassword);
             if(!matchPassword) return res.status(500).json({ message: "incorrect password" });
@@ -102,10 +102,12 @@ export const login = async (req, res) => {
                     userData.tokens.push( token );
                     await userData.save();
                     const name1 = userData.name
+                    const isAdmin = userData.isAdmin
                     return res.status(200).json({
                         success: true,
                         token,
-                        name:name1
+                        name:name1,
+                        isAdmin:isAdmin
                     });
                 } else {
                     return res.status(200).json({ success: false });
@@ -114,10 +116,12 @@ export const login = async (req, res) => {
                 return res.status(200).json({ action: true });
             }
         } else {
-            return res.status(200).json({ action: false });
+            return res.status(200).json({ message:"invalid email"  });
         }
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error" });
+        console.error(error); // Log full error
+        return res.status(500).json({ message: error.message});
+
     }
 };
 
@@ -127,23 +131,24 @@ export const forgotPass = async (req,res) =>{
         const {email, newPassword} = req.body
         
         const hashedPassword = await hashPassword(newPassword);
-        
-        
+
         // const user = await userModle.findOne({ email });
     const user = await userModle.findOne(
       { email:email }
     );
+    if (!user) return res.status(404).json({ message: 'User not found' });
     console.log(user);
     
     user.password = hashedPassword
     await user.save()
 
-    if (!user) return res.status(404).json({ message: 'User not found' });
+    
 
     res.status(200).json({ message: 'Password has been updated' });
 
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error" });
+        console.error(error)
+        return res.status(500).json({ message: error.message });
     }
 }
 
@@ -161,6 +166,7 @@ export const addToCart = async (req , res)=>{
       return res.status(400).json({ message: 'item already in wishlist' });
     }
     } catch (error) {
-        return res.status(500).json({ message: "Internal server error" });
+        console.error(error)
+        return res.status(500).json({ message: error.message });
     }
 }

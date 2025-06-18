@@ -1,4 +1,4 @@
-import  sign from 'jsonwebtoken';
+
 import dotenv from 'dotenv'
 import jwt  from 'jsonwebtoken';
 import userModle from '../module/modles/user.modle.js';
