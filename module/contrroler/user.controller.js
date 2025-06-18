@@ -40,9 +40,9 @@ export const authSignup = async (req, res) => {
                 };
                 console.log(password);
                 const existData = await userModle.findOne({ email:values.email });
-                      
-                      console.log(existData);
-                
+                if(existData) {
+                    return res.status(400).json({ message: "acount already exist" });
+                }
 
                 const userData = await userModle.create({name:values.name , email:values.email , password:values.password , phone:values.phone})
 
