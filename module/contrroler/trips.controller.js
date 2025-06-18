@@ -10,7 +10,7 @@ import hotelModel from './../modles/hotels.model.js';
 
 export const addTrip = async (req, res) => {
   try {
-    const { name, description, price, city, location, date ,type} = req.body;
+    const { name, description, price, city, location ,type, rating} = req.body;
 
     const photos = req.files?.map(file => file.path); // handled by multer
 
@@ -21,7 +21,7 @@ export const addTrip = async (req, res) => {
       city: city?.trim(),
       location: location?.trim(),
       type: type?.trim(),
-      date: date ? new Date(date) : undefined,
+      rating: Number(rating) ,
       photos
     };
 

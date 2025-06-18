@@ -121,13 +121,13 @@ export const login = async (req, res) => {
                         isAdmin:isAdmin
                     });
                 } else {
-                    return res.status(200).json({ success: false });
+                    return res.status(500).json({ success: false });
                 }
             } else {
-                return res.status(200).json({ action: true });
+                return res.status(501).json({ action: true });
             }
         } else {
-            return res.status(200).json({ message:"invalid email"  });
+            return res.status(500).json({ message:"invalid email"  });
         }
     } catch (error) {
         console.error(error); // Log full error

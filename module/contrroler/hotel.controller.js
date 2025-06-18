@@ -5,11 +5,11 @@ export const createHotel = async (req, res, next) => {
 
     try {
 
-      const {name,city,location,rating,description,price} = req.body
+      const {name,city,location,rating,description,price,type} = req.body
 
       const photos = req.files?.map(file => file.path);
       
-      const data = {name,city,location,photos,rating,description,price}
+      const data = {name,city,location,photos,rating,description,price,type}
       console.log(data);
       
       const result = await validateHotel(data);
@@ -19,8 +19,9 @@ export const createHotel = async (req, res, next) => {
 
       const savedHotel = await hotelModel.create(data);
       res.status(200).json(savedHotel);
-    } catch (err) {
-      res.status(500).json({ error: "Error adding hotel" })
+    } catch (error) {
+      console.error(err)
+      res.status(500).json({ error: err })
     }
   };
 
