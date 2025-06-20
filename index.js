@@ -7,7 +7,7 @@ import userRouter from './module/routers/user.router..js';
 import dotenv from 'dotenv';
 
 import hotelRouter from './module/routers/hotel.router.js';
-import  { bookNow } from './module/contrroler/intro.controller.js';
+import  { bookHotelNow, bookNow } from './module/contrroler/intro.controller.js';
 import tripRouter from './module/routers/trips.router.js';
 import { jwtCheck } from './utils/jwtGeneration.js';
 import { authLoginHelper } from './helper/auth.js';
@@ -55,6 +55,7 @@ app.get('/test', (req, res) => {
 });
 app.use('/user',userRouter)
 app.post('/book/:id',jwtCheck, bookNow)
+app.post('/bookhotel/:id',jwtCheck, bookHotelNow)
 app.use('/hotel',hotelRouter)
 app.use('/trip',tripRouter)
 

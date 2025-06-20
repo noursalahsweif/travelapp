@@ -33,7 +33,7 @@ Safe travels,
 — Your Travel App Team 🌍`
 
     };
-
+    
     await transporter.sendMail(mailOptions);
   } catch (error) {
     console.error("Failed to send email:", error);
