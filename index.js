@@ -5,12 +5,14 @@ import mongoDbConnection from './db/db.connection.js'
 import cors from "cors";
 import userRouter from './module/routers/user.router..js';
 import dotenv from 'dotenv';
-import hotelRouter from './module/routers/hotel.router.js';
 
+import hotelRouter from './module/routers/hotel.router.js';
+import  { bookNow } from './module/contrroler/intro.controller.js';
 import tripRouter from './module/routers/trips.router.js';
 import { jwtCheck } from './utils/jwtGeneration.js';
-import userModle from './module/modles/user.modle.js';
 import { authLoginHelper } from './helper/auth.js';
+// import introRouter from './module/routers/intro.model.js';
+// import { bookNow } from './module/contrroler/intro.controller.js';
 
 dotenv.config();
 const app = express()
@@ -52,8 +54,8 @@ app.get('/test', (req, res) => {
     res.json({ message: 'Test endpoint is working!' });
 });
 app.use('/user',userRouter)
+app.post('/book/:id',jwtCheck, bookNow)
 app.use('/hotel',hotelRouter)
-// app.use('/room',roomRouter)
 app.use('/trip',tripRouter)
 
 

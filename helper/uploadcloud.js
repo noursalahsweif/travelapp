@@ -22,9 +22,19 @@ const tripStorage = new CloudinaryStorage({
   },
 });
 
+const introStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'intro',
+    quality: 'auto:best',
+    allowed_formats: ['jpg', 'jpeg', 'png'],
+  },
+});
+
 const upload = multer({ storage: hotelStorage }); // default: hotels
 
 // ✅ Export both uploaders
 export default upload;
 export const uploadTrip = multer({ storage: tripStorage });
+export const uploadIntro = multer({ storage: introStorage });
 

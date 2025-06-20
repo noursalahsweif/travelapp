@@ -19,49 +19,47 @@ const hashPassword = async (password) => {
 };
 
 export const authSignup = async (req, res) => {
-    try {
-        const {name , email , password , cpassword , phone} = req.body; // No type annotation needed in JS
-        
+  try {
+    const { name, email, password, cpassword, phone } = req.body;
 
-        signupSchema.validate({name , email , password , cpassword , phone})
-            .then(async (validationData) => {
-                // console.log(validationData);
-                
-                const { name, email, phone, password ,cpassword} = validationData;
-                const encryptedPassword = await hashPassword(password);
-                
-                
-                const values = {
-                    name,
-                    email,
-                    phone,
-                    password: encryptedPassword,
-                     
-                };
-                console.log(password);
-                const existData = await userModle.findOne({ email:values.email });
-                if(existData) {
-                    return res.status(400).json({ message: "acount already exist" });
-                }
+    // Validate input with await
+    const validationData = await signupSchema.validate(
+      { name, email, password, cpassword, phone },
+      { abortEarly: false } // Show all validation errors
+    );
 
-                const userData = await userModle.create({name:values.name , email:values.email , password:values.password , phone:values.phone})
+    const { name: validatedName, email: validatedEmail, phone: validatedPhone, password: validatedPassword } = validationData;
 
-                if (!userData) {
-                    return res.status(200).json({ message: "falied" });
-                } else {
-                    
-                    return res.status(200).json({ success: true, userData });
-                }
-            })
-            .catch((validationError) => {
-                console.error(validationError);
-                return res.status(400).json({ message: "Validation failed" });
-            });
-
-    } catch (error) {
-        return res.status(500).json({ message: "Internal server error" });
+    const existData = await userModle.findOne({ email: validatedEmail });
+    if (existData) {
+      return res.status(400).json({ message: "Account already exists" });
     }
+
+    const encryptedPassword = await hashPassword(validatedPassword);
+    const userData = await userModle.create({
+      name: validatedName,
+      email: validatedEmail,
+      password: encryptedPassword,
+      phone: validatedPhone,
+    });
+
+    if (!userData) {
+      return res.status(500).json({ message: "User creation failed" });
+    }
+
+    return res.status(200).json({ success: true, userData });
+
+  } catch (error) {
+    if (error.name === "Validation Error") {
+      console.error("Validation errors:", error.errors);
+      return res.status(400).json({ message: "Validation failed", errors: error.errors });
+    }
+
+    console.error("Signup error:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
 };
+
 
 export const adminLogin = async (req,res) =>{
     try {
